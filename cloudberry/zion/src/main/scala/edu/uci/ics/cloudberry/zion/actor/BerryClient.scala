@@ -39,7 +39,9 @@ class BerryClient(val jsonParser: JSONParser,
   }
 
   private def handleRequest(json: JsValue, transform: IPostTransform): Unit = {
+    log.info("berryClient.handleRequest: " + json)
     val datasets = jsonParser.getDatasets(json).toSeq
+
     val fDataInfos = Future.traverse(datasets) { dataset =>
       dataManager ? AskInfo(dataset)
     }.map(seq => seq.map(_.asInstanceOf[Option[DataSetInfo]]))
@@ -52,6 +54,7 @@ class BerryClient(val jsonParser: JSONParser,
           return
       }.toMap
       val (queries, runOption) = jsonParser.parse(json, schemaMap)
+
       if (runOption.sliceMills <= 0) {
         restfulSolver ! (queries, transform)
       } else {

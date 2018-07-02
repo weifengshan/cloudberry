@@ -2,7 +2,12 @@ package edu.uci.ics.cloudberry.zion.model.schema
 
 import edu.uci.ics.cloudberry.zion.model.impl.UnresolvedSchema
 import edu.uci.ics.cloudberry.zion.model.schema.DataType.DataType
+
+
 import org.joda.time.format.DateTimeFormat
+import org.joda.time.DateTime
+
+
 
 //TODO support nested type
 object DataType extends Enumeration {
@@ -100,11 +105,20 @@ case class TimeField(override val name: String, override val isOptional: Boolean
   extends Field {
   override val dataType = DataType.Time
 
+
+
 }
 
 object TimeField {
   val TimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
   val TimeFormatForSQL = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
+
+  val oracleDateFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.S")
+  def parseOracleDateTime(text:String):DateTime ={
+    DateTime.parse(text, oracleDateFormat)
+  }
+
+
 }
 
 case class StringField(override val name: String, override val isOptional: Boolean = false)

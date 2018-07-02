@@ -171,6 +171,8 @@ abstract class SQLGenerator extends IQLGenerator {
 
     val resultAfterGlobalAggr = parseGlobalAggr(query.globalAggr, resultAfterSelect.exprMap, queryBuilder)
 
+    println("SQL Generator="+queryBuilder.toString())
+
     queryBuilder.toString
   }
 

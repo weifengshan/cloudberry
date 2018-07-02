@@ -18,6 +18,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success}
 
+
 class DataStoreManager(metaDataset: String,
                        val conn: IDataConn,
                        val queryGenFactory: IQLGeneratorFactory,
@@ -110,6 +111,7 @@ class DataStoreManager(metaDataset: String,
         }
       }
     case askInfo: AskInfo =>
+      log.warning("askInfor=="+sender.toString()+",who="+askInfo.who)
       sender ! metaData.get(askInfo.who)
 
     case info: DataSetInfo =>
@@ -289,12 +291,12 @@ class DataStoreManager(metaDataset: String,
     val maxTimeQuery = Query(dataset, globalAggr = Some(GlobalAggregateStatement(AggregateStatement(timeField, Max, Field.as(Max(timeField), "max")))))
     val cardinalityQuery = Query(dataset, globalAggr = Some(GlobalAggregateStatement(AggregateStatement(schema.fieldMap("*"), Count, Field.as(Min(timeField), "count")))))
     val parser = queryGenFactory()
-    import TimeField.TimeFormat
+
     for {
-      minTime <- conn.postQuery(parser.generate(minTimeQuery, Map(dataset -> schema))).map(r => (r \\ "min").head.as[String])
-      maxTime <- conn.postQuery(parser.generate(maxTimeQuery, Map(dataset -> schema))).map(r => (r \\ "max").head.as[String])
-      cardinality <- conn.postQuery(parser.generate(cardinalityQuery, Map(dataset -> schema))).map(r => (r \\ "count").head.as[Long])
-    } yield (new TJodaInterval(TimeFormat.parseDateTime(minTime), TimeFormat.parseDateTime(maxTime)), cardinality)
+      minTime <- conn.postQuery(parser.generate(minTimeQuery, Map(dataset -> schema))).map(r => (r \\ "MIN").head.as[String])
+      maxTime <- conn.postQuery(parser.generate(maxTimeQuery, Map(dataset -> schema))).map(r => (r \\ "MAX").head.as[String])
+      cardinality <- conn.postQuery(parser.generate(cardinalityQuery, Map(dataset -> schema))).map(r => (r \\ "COUNT").head.as[Long])
+    } yield (new TJodaInterval(TimeField.parseOracleDateTime(minTime), TimeField.parseOracleDateTime(maxTime)), cardinality)
   }
 
   private def flushMetaData(): Unit = {

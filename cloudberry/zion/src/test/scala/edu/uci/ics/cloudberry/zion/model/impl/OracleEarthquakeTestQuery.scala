@@ -1,15 +1,15 @@
+
 package edu.uci.ics.cloudberry.zion.model.impl
 
 import edu.uci.ics.cloudberry.zion.model.schema.{GeoCellThousandth, _}
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.json.Json
 
-object TestQuery {
+object OracleEarthquakeTestQuery {
 
   DateTimeZone.setDefault(DateTimeZone.UTC)
   val TwitterDataSet = TwitterDataStore.DatasetName
   val TwitterDataSetForSparkSQL = "twitter_ds_tweet"
-
   val PopulationDataSet = PopulationDataStore.DatasetName
   val literacyDataSet = LiteracyDataStore.DatasetName
   val twitterSchema = TwitterDataStore.TwitterSchema

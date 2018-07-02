@@ -22,13 +22,13 @@ case class DataSetInfo(name: String,
 
 object DataSetInfo {
 
-  val MetaDataDBName: String = "berry.meta"
+  val MetaDataDBName: String = "berrymeta"
   val MetaSchema = Schema(
-    "berry.MetaType",
-    Seq(StringField("name"), TimeField("stats.createTime")),
+    "MetaType",
+    Seq(StringField("name"), TimeField("createTime")),
     Seq.empty,
     Seq(StringField("name")),
-    TimeField("stats.createTime")
+    TimeField("createTime")
   )
 
   /**

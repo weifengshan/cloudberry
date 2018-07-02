@@ -1,10 +1,11 @@
 package db
 
 import edu.uci.ics.cloudberry.zion.model.datastore.IDataConn
-import edu.uci.ics.cloudberry.zion.model.impl.{DataSetInfo, MySQLConn, PostgreSQLConn, AsterixSQLPPConn}
-
+import edu.uci.ics.cloudberry.zion.model.impl.{AsterixSQLPPConn, DataSetInfo, MySQLConn, OracleConn, PostgreSQLConn}
+import play.api.libs.json.{Json, _}
+import scala.concurrent.{Await, Future}
 import scala.concurrent.{ExecutionContext, Future}
-
+import scala.concurrent.duration._
 private[db] class Migration_20160814() {
 
   import Migration_20160814._
@@ -38,6 +39,37 @@ private[db] class Migration_20160814() {
              |)
              |""".stripMargin
         }
+      case oracle: OracleConn =>
+        //select count(*) from user_tables where table_name = 'QZ_9130'
+
+
+        //val iCountJson =conn.postQuery("select * from QZ_9130_test")
+        val iCountJson  = conn.postQuery("select count(*) as T from user_tables where table_name = 'berrymeta'")
+        //val iCountJson = Await.result(conn.postQuery("select count(*) as T from user_tables where table_name = 'QZ_9130'"),10.seconds)
+        System.out.println("exist="+iCountJson);
+//        for(v <- iCountJson) {
+//          System.out.println("exist="+v);
+//          if (v == "0"){
+//            conn.postControl {
+//              //oracle does not support: if not exists,json and datetime  `
+//              s"""
+//                 |create table  "berrymeta" (
+//                 |"name" varchar(2000) not null,
+//                 |"schema" varchar(4000)  not null,
+//                 |"dataInterval" varchar(255)  not null,
+//                 |"stats" varchar(255)  not null,
+//                 |"stats.createTime" date not null,
+//                 |primary key("name")
+//                 |)
+//                 """.stripMargin
+//            }
+          //}
+//          else{
+//            return Future(true)
+//          }
+//        }
+        return Future(true)
+
       case sqlpp: AsterixSQLPPConn =>
         conn.postControl {
           s"""

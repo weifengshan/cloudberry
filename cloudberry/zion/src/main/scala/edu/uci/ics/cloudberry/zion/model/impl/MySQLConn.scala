@@ -106,5 +106,5 @@ class MySQLConn(url: String)(implicit ec: ExecutionContext) extends IDataConn {
 }
 
 object SQLConn {
-  val metaName = "berry.meta"
+  val metaName = "berrymeta"
 }

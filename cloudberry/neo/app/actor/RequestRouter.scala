@@ -24,9 +24,10 @@ class RequestRouter (berryClientProp: Props, config: Config, requestHeader: Requ
       val remoteAddress = requestHeader.remoteAddress
       val userAgent = requestHeader.headers.get("user-agent").getOrElse("unknown")
       clientLogger.info(s"Request: user-IP = $remoteAddress; user-agent = $userAgent; user-query = ${requestBody.toString}")
-
+        System.out.println("Request: user-IP = $remoteAddress; user-agent = $userAgent; user-query = ${requestBody.toString}");
       val transformer = parseTransform(requestBody)
       val berryRequestBody = getBerryRequest(requestBody)
+      println("wwwwwwwwwwwwww  berryRequestBody="+berryRequestBody)
       berry ! (berryRequestBody, transformer)
     case e =>
       log.error("Unknown type of request: " + e)
